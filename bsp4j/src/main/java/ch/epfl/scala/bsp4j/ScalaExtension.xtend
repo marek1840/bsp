@@ -25,6 +25,7 @@ class ScalaBuildTarget {
 @JsonRpcData
 class ScalaTestParams {
   List<ScalaTestClassesItem> testClasses
+  @NonNull List<String> jvmOptions
 }
 
 @JsonRpcData

@@ -561,6 +561,7 @@ object ScalaPlatform {
 
 @JsonCodec final case class ScalaTestParams(
     testClasses: Option[List[ScalaTestClassesItem]],
+    jvmOptions: List[String]
 )
 
 // Request: 'buildTarget/scalacOptions', C -> S
@@ -624,12 +625,10 @@ object ScalaPlatform {
     parent: Option[BuildTargetIdentifier],
     children: List[BuildTargetIdentifier],
 )
-
-
 @JsonCodec final case class BspConnectionDetails(
-  name: String,
-  argv: List[String],
-  version: String,
-  bspVersion: String,
-  languages: List[String]
+    name: String,
+    argv: List[String],
+    version: String,
+    bspVersion: String,
+    languages: List[String]
 )
