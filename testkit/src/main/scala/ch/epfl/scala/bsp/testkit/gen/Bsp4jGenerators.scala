@@ -1,5 +1,6 @@
 package ch.epfl.scala.bsp.testkit.gen
 
+import java.util.Collections
 import java.{lang, util}
 
 import UtilGenerators._
@@ -59,19 +60,21 @@ trait Bsp4jGenerators {
     buildTarget
   }
 
-  def genBuildTarget(dataKind: String, data: JsonElement): Gen[BuildTarget] = for {
-    target <- genBuildTarget
-  } yield {
-    target.setDataKind(dataKind)
-    target.setData(data)
-    target
-  }
+  def genBuildTarget(dataKind: String, data: JsonElement): Gen[BuildTarget] =
+    for {
+      target <- genBuildTarget
+    } yield {
+      target.setDataKind(dataKind)
+      target.setData(data)
+      target
+    }
 
-  def genBuildTargetWithScala(implicit gson: Gson): Gen[BuildTarget] = for {
-    scalaBuildTarget <- genScalaBuildTarget
-    scalaJson = gson.toJsonTree(scalaBuildTarget)
-    target <- genBuildTarget("scala", scalaJson)
-  } yield target
+  def genBuildTargetWithScala(implicit gson: Gson): Gen[BuildTarget] =
+    for {
+      scalaBuildTarget <- genScalaBuildTarget
+      scalaJson = gson.toJsonTree(scalaBuildTarget)
+      target <- genBuildTarget("scala", scalaJson)
+    } yield target
 
   lazy val genBuildTargetCapabilities: Gen[BuildTargetCapabilities] = for {
     canCompile <- arbitrary[Boolean]
@@ -89,7 +92,8 @@ trait Bsp4jGenerators {
     event
   }
 
-  lazy val genBuildTargetEventKind: Gen[BuildTargetEventKind] = Gen.oneOf(BuildTargetEventKind.values)
+  lazy val genBuildTargetEventKind: Gen[BuildTargetEventKind] =
+    Gen.oneOf(BuildTargetEventKind.values)
 
   lazy val genBuildTargetIdentifier: Gen[BuildTargetIdentifier] = for {
     uri <- genUri
@@ -389,12 +393,9 @@ trait Bsp4jGenerators {
   } yield new ScalaTestClassesResult(items)
 
   lazy val genScalaTestParams: Gen[ScalaTestParams] = for {
-    items <- genScalaTestClassesItem.list.nullable
-  } yield {
-    val params = new ScalaTestParams()
-    params.setTestClasses(items)
-    params
-  }
+    items <- genScalaTestClassesItem.list
+    jvmOpts <- Gen.identifier.list
+  } yield new ScalaTestParams(items, jvmOpts)
 
   lazy val genShowMessageParams: Gen[ShowMessageParams] = for {
     messageType <- genMessageType
@@ -429,7 +430,6 @@ trait Bsp4jGenerators {
   lazy val genSourcesResult: Gen[SourcesResult] = for {
     items <- genSourcesItem.list
   } yield new SourcesResult(items)
-
 
   lazy val genStatusCode: Gen[StatusCode] = Gen.oneOf(StatusCode.values)
 
@@ -560,12 +560,12 @@ trait Bsp4jGenerators {
   }
 
   lazy val genTestStart: Gen[TestStart] = for {
-      displayName <- arbitrary[String]
-      location <- genLocation.nullable
-    } yield {
-      val testStart = new TestStart(displayName)
-      testStart.setLocation(location)
-      testStart
+    displayName <- arbitrary[String]
+    location <- genLocation.nullable
+  } yield {
+    val testStart = new TestStart(displayName)
+    testStart.setLocation(location)
+    testStart
   }
 
   lazy val genTestStatus: Gen[TestStatus] = Gen.oneOf(TestStatus.values)
@@ -581,7 +581,6 @@ trait Bsp4jGenerators {
   lazy val genWorkspaceBuildTargetsResult: Gen[WorkspaceBuildTargetsResult] = for {
     targets <- genBuildTarget.list
   } yield new WorkspaceBuildTargetsResult(targets)
-
 
   implicit class GenExt[T](gen: Gen[T]) {
     def optional: Gen[Option[T]] = Gen.option(gen)

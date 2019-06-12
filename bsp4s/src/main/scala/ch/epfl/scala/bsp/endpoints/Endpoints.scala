@@ -53,3 +53,11 @@ trait Workspace {
       extends Endpoint[WorkspaceBuildTargetsRequest, WorkspaceBuildTargetsResult](
         "workspace/buildTargets")
 }
+
+object DebugSession extends DebugSession
+
+trait DebugSession {
+  object start extends Endpoint[DebugSessionParams, DebugSessionAddress]("debugSession/start")
+  object debuggeeAttachable
+      extends Endpoint[DebugSessionAddress, Unit]("buildTarget/debuggeeAttachable")
+}
