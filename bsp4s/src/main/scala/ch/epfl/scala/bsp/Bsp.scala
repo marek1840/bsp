@@ -641,6 +641,7 @@ object TestParamsDataKind {
 )
 
 @JsonCodec final case class DebugSessionParams(
+    originId: Option[String],
     targets: List[BuildTargetIdentifier],
     dataKind: String,
     data: Json

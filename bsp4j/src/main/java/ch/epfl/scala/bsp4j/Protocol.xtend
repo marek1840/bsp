@@ -595,11 +595,13 @@ class TaskFinishParams {
 
 @JsonRpcData
 class DebugSessionParams {
+    String originId;
     @NonNull List<BuildTargetIdentifier> targets;
     @NonNull String dataKind;
     @JsonAdapter(JsonElementTypeAdapter.Factory) Object data;
 
-    new(@NonNull List<BuildTargetIdentifier> targets, @NonNull String dataKind, Object data) {
+    new(String originId, @NonNull List<BuildTargetIdentifier> targets, @NonNull String dataKind, Object data) {
+        this.originId = originId;
         this.targets = targets;
         this.dataKind = dataKind;
         this.data = data;
